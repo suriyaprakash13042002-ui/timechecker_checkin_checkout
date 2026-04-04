@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Checker | Check-out Calculator</title>
+    <meta name="description" content="Calculate your exact check-out time based on a 9 hour 30 minute shift.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="container">
+        <div class="bento-grid">
+
+            <!-- CELL: Header -->
+            <div class="bento-cell cell-header">
+                <div class="header-left">
+                    <h1>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                            <line x1="8" y1="6" x2="16" y2="6"></line>
+                            <line x1="8" y1="10" x2="12" y2="10"></line>
+                            <line x1="8" y1="14" x2="16" y2="14"></line>
+                            <line x1="8" y1="18" x2="12" y2="18"></line>
+                        </svg>
+                        Time Checker
+                    </h1>
+                    <p class="subtitle">Shift: <strong>9h 30m</strong></p>
+                </div>
+            </div>
+
+            <!-- CELL: Theme Toggle -->
+            <div class="bento-cell cell-toggle">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+                    <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- CELL: Check-In -->
+            <div class="bento-cell cell-checkin">
+                <div class="time-block-header">
+                    <div class="label-row">
+                        <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span class="time-label">Check-In Time</span>
+                    </div>
+                    <button class="now-btn" id="nowBtn" title="Use current time">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Now
+                    </button>
+                </div>
+                <div class="time-input-row">
+                    <div class="input-wrap">
+                        <input type="text" id="inHour" class="time-box" maxlength="2" placeholder="HH"
+                            inputmode="numeric" aria-label="Hour">
+                        <span class="input-hint">Hour</span>
+                    </div>
+                    <span class="time-colon">:</span>
+                    <div class="input-wrap">
+                        <input type="text" id="inMinute" class="time-box" maxlength="2" placeholder="MM"
+                            inputmode="numeric" aria-label="Minute">
+                        <span class="input-hint">Min</span>
+                    </div>
+                    <div class="ampm-toggle" id="ampmToggle">
+                        <button class="ampm-btn active" id="amBtn">AM</button>
+                        <button class="ampm-btn" id="pmBtn">PM</button>
+                    </div>
+                </div>
+                <div class="validation-msg" id="validationMsg"></div>
+            </div>
+
+            <!-- CELL: Result (spans 2 rows) -->
+            <div class="bento-cell cell-result" id="resultSection">
+                <div class="result-icon" id="resultIcon">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <span class="result-tag">Check-Out Time</span>
+                <span class="result-value" id="checkOutTime">--:-- --</span>
+            </div>
+
+            <!-- CELL: Leave -->
+            <div class="bento-cell cell-leave">
+                <div class="label-row">
+                    <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="option-label">Leave</span>
+                </div>
+                <div class="pill-group" id="leaveGroup">
+                    <input type="radio" id="leave0" name="leave" value="0" checked>
+                    <label for="leave0">None</label>
+                    <input type="radio" id="leave1" name="leave" value="4">
+                    <label for="leave1">Half Day</label>
+                </div>
+            </div>
+
+            <!-- CELL: Permission -->
+            <div class="bento-cell cell-permission">
+                <div class="label-row">
+                    <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span class="option-label">Permission</span>
+                </div>
+                <div class="pill-group" id="permissionGroup">
+                    <input type="radio" id="perm0" name="permission" value="0" checked>
+                    <label for="perm0">None</label>
+                    <input type="radio" id="perm1" name="permission" value="1">
+                    <label for="perm1">1 Hour</label>
+                    <input type="radio" id="perm2" name="permission" value="2">
+                    <label for="perm2">2 Hours</label>
+                </div>
+            </div>
+
+            <!-- CELL: Clock -->
+            <div class="bento-cell cell-clock" id="clockBar">
+                <svg class="clock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span id="liveDate"></span>
+                <span class="clock-dot">•</span>
+                <span id="liveTime"></span>
+            </div>
+
+            <!-- CELL: Reset -->
+            <div class="bento-cell cell-reset">
+                <button class="btn-reset" id="resetBtn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="1 4 1 10 7 10"></polyline>
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                    </svg>
+                    Reset
+                </button>
+            </div>
+
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+
+</html>
