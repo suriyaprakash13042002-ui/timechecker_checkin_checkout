@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const permissionRadios = document.getElementsByName('permission');
     const leaveRadios = document.getElementsByName('leave');
 
-    // ── Constants ──
-    const HOURS_TO_ADD = 9;
-    const MINUTES_TO_ADD = 30;
+    // ── Shift duration (dynamic, persisted) ──
+    let shiftHours = parseInt(localStorage.getItem('tcShiftH') || '9', 10);
+    let shiftMinutes = parseInt(localStorage.getItem('tcShiftM') || '30', 10);
 
     // ── Alert state ──
     let checkOutDateObj = null;
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         liveTimeEl.textContent = `${h}:${pad(m)}:${pad(s)} ${ap}`;
     }
     updateLiveClock();
-    setInterval(updateLiveClock, 1000);
+    setInterval(() => { updateLiveClock(); updateCountdown(); }, 1000);
 
     // ════════════════════════════════════
     // 2. SMART INPUT & AUTO-FORMAT
@@ -137,6 +137,46 @@ document.addEventListener('DOMContentLoaded', () => {
         inHour.classList.add('valid');
         inMinute.classList.add('valid');
 
+        autoCalculate();
+    });
+
+    // ════════════════════════════════════
+    // 4.5 SHIFT DURATION
+    // ════════════════════════════════════
+    const shiftHourInput = document.getElementById('shiftHour');
+    const shiftMinInput = document.getElementById('shiftMin');
+    const countdownWrap = document.getElementById('countdownWrap');
+    const countdownLabel = document.getElementById('countdownLabel');
+    const countdownValue = document.getElementById('countdownValue');
+    const shiftDisplayEl = document.getElementById('shiftDisplay');
+    const toastContainer = document.getElementById('toastContainer');
+
+    function formatShiftLabel(h, m) {
+        return m === 0 ? `${h}h` : `${h}h ${m}m`;
+    }
+
+    function updateShiftDisplay() {
+        if (shiftDisplayEl) shiftDisplayEl.textContent = formatShiftLabel(shiftHours, shiftMinutes);
+    }
+
+    // Init shift selects from saved / default values
+    shiftHourInput.value = shiftHours;
+    shiftMinInput.value  = shiftMinutes;
+    updateShiftDisplay();
+
+    // Shift hour dropdown
+    shiftHourInput.addEventListener('change', () => {
+        shiftHours = parseInt(shiftHourInput.value, 10);
+        localStorage.setItem('tcShiftH', shiftHours);
+        updateShiftDisplay();
+        autoCalculate();
+    });
+
+    // Shift minute dropdown
+    shiftMinInput.addEventListener('change', () => {
+        shiftMinutes = parseInt(shiftMinInput.value, 10);
+        localStorage.setItem('tcShiftM', shiftMinutes);
+        updateShiftDisplay();
         autoCalculate();
     });
 
@@ -236,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedLeave = document.querySelector('input[name="leave"]:checked');
         if (selectedLeave) leaveHours = parseFloat(selectedLeave.value);
 
-        const totalShiftMins = (HOURS_TO_ADD * 60) + MINUTES_TO_ADD;
+        const totalShiftMins = (shiftHours * 60) + shiftMinutes;
         const deductedMins = (permHours + leaveHours) * 60;
         const actualMins = totalShiftMins - deductedMins;
 
@@ -272,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ── Alert setup ──
         checkOutDateObj = checkOutDate;
+        updateCountdown(); // immediate refresh
         if (new Date() < checkOutDateObj) {
             hasAlerted = false;
         } else {
@@ -286,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         checkOutDisplay.className = 'result-value finished';
                         resultIcon.className = 'result-icon finished';
                         resultSection.classList.add('finished');
-                        setTimeout(() => alert("Time's up! Your shift is over."), 100);
+                        showToast("Time\u2019s Up! \uD83C\uDF89", "Your shift is now complete.", "success");
                     }
                 }
             }, 1000);
@@ -312,6 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultSection.classList.remove('finished');
         clearValidation();
         checkOutDateObj = null;
+        if (countdownWrap) { countdownWrap.classList.remove('visible', 'done'); }
 
         document.getElementById('leave0').checked = true;
         document.getElementById('perm0').checked = true;
@@ -330,6 +372,54 @@ document.addEventListener('DOMContentLoaded', () => {
         const ap = h >= 12 ? 'PM' : 'AM';
         h = h % 12 || 12;
         return `${h}:${pad(m)} ${ap}`;
+    }
+
+    // ════════════════════════════════════
+    // COUNTDOWN TIMER
+    // ════════════════════════════════════
+    function updateCountdown() {
+        if (!countdownWrap || !checkOutDateObj) return;
+        const now = new Date();
+        const diff = checkOutDateObj - now;
+
+        countdownWrap.classList.add('visible');
+
+        if (diff <= 0) {
+            countdownLabel.textContent = 'Shift Complete!';
+            countdownValue.textContent = '00:00:00';
+            countdownWrap.classList.add('done');
+        } else {
+            const totalSecs = Math.floor(diff / 1000);
+            const h = Math.floor(totalSecs / 3600);
+            const m = Math.floor((totalSecs % 3600) / 60);
+            const s = totalSecs % 60;
+            countdownLabel.textContent = 'Time Remaining';
+            countdownValue.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+            countdownWrap.classList.remove('done');
+        }
+    }
+
+    // ════════════════════════════════════
+    // TOAST NOTIFICATIONS
+    // ════════════════════════════════════
+    function showToast(title, subtitle, type = 'info') {
+        if (!toastContainer) return;
+        const iconSVG = type === 'success'
+            ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+            : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `
+            <div class="toast-icon ${type}">${iconSVG}</div>
+            <div class="toast-text">
+                <span class="toast-title">${title}</span>
+                <span class="toast-subtitle">${subtitle}</span>
+            </div>`;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('removing');
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
     }
 
     // ════════════════════════════════════

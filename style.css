@@ -751,6 +751,7 @@ body {
         "header header header toggle"
         "checkin checkin result result"
         "leave perm result result"
+        "shift shift shift shift"
         "clock clock reset reset";
     gap: 14px;
     animation: fadeInUp 0.55s ease both;
@@ -857,6 +858,7 @@ body {
             "header header toggle"
             "checkin checkin result"
             "leave perm result"
+            "shift shift shift"
             "clock clock reset";
     }
 }
@@ -870,6 +872,7 @@ body {
             "checkin checkin"
             "result result"
             "leave perm"
+            "shift shift"
             "clock reset";
         gap: 10px;
     }
@@ -898,11 +901,296 @@ body {
             "result"
             "leave"
             "perm"
+            "shift"
             "clock"
             "reset";
     }
 
     .cell-toggle {
         padding: 10px;
+    }
+}
+
+/* ════════════════════════════════════
+   SHIFT DURATION CELL
+   ════════════════════════════════════ */
+.cell-shift {
+    grid-area: shift;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 14px 22px;
+}
+
+.shift-header-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.shift-body {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.shift-presets {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.shift-preset-btn {
+    padding: 8px 14px;
+    border: none;
+    background: var(--bg);
+    color: var(--text-light);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: var(--nm-out-sm);
+    transition: all var(--transition), background-color 0.4s ease;
+    white-space: nowrap;
+}
+
+.shift-preset-btn:hover:not(.active) {
+    transform: translateY(-1px) scale(1.04);
+    color: var(--text-mid);
+    box-shadow: var(--nm-out);
+}
+
+.shift-preset-btn:active {
+    box-shadow: var(--nm-in);
+    transform: scale(0.95);
+}
+
+.shift-preset-btn.active {
+    color: var(--accent);
+    box-shadow: var(--nm-in);
+    font-weight: 800;
+    animation: pillSelect 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.shift-separator {
+    width: 1px;
+    height: 34px;
+    background: rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+    align-self: center;
+    transition: background-color 0.4s ease;
+}
+
+[data-theme="dark"] .shift-separator {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.shift-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.shift-custom-tag {
+    font-size: 0.68rem;
+    color: var(--text-light);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    transition: color 0.4s ease;
+}
+
+/* Compact time-box inside shift cell */
+.cell-shift .time-box {
+    width: 48px;
+    height: 42px;
+    font-size: 1rem;
+}
+
+/* ── Shift Dropdowns ── */
+.shift-select-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.select-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.shift-select {
+    height: 44px;
+    width: 68px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0 22px 0 8px;
+    outline: none;
+    box-shadow: var(--nm-in);
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: box-shadow var(--transition), background-color 0.4s ease, color 0.4s ease;
+}
+
+.shift-select:focus {
+    box-shadow: var(--nm-in-deep), 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.shift-select option {
+    font-weight: 700;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.select-arrow {
+    position: absolute;
+    right: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-light);
+    transition: color 0.4s ease;
+}
+
+/* ════════════════════════════════════
+   COUNTDOWN TIMER
+   ════════════════════════════════════ */
+.countdown-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 10px 16px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    box-shadow: var(--nm-in);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.countdown-wrap.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.countdown-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-light);
+    transition: color 0.4s ease;
+}
+
+.countdown-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 3px;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    transition: color 0.4s ease;
+}
+
+.countdown-wrap.done .countdown-label { color: var(--green); }
+.countdown-wrap.done .countdown-value  { color: var(--green); }
+
+/* ════════════════════════════════════
+   TOAST NOTIFICATIONS
+   ════════════════════════════════════ */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    background: var(--bg);
+    border-radius: var(--radius);
+    box-shadow: var(--nm-out);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 220px;
+    max-width: 320px;
+    pointer-events: all;
+    animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: var(--theme-transition);
+}
+
+.toast.removing {
+    animation: toastOut 0.3s ease forwards;
+}
+
+.toast-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: var(--nm-out-sm);
+}
+
+.toast-icon.success { color: var(--green); }
+.toast-icon.info    { color: var(--accent); }
+
+.toast-text     { flex: 1; line-height: 1.4; }
+.toast-title    { font-weight: 800; display: block; color: var(--text); }
+.toast-subtitle { font-size: 0.75rem; color: var(--text-mid); margin-top: 2px; display: block; }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(30px) scale(0.9); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toastOut {
+    from { opacity: 1; transform: translateX(0) scale(1); }
+    to   { opacity: 0; transform: translateX(30px) scale(0.9); }
+}
+
+/* ── Shift cell mobile tweaks ── */
+@media (max-width: 580px) {
+    .cell-shift {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 16px;
+    }
+
+    .shift-separator {
+        width: 100%;
+        height: 1px;
     }
 }
