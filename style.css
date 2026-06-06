@@ -750,7 +750,7 @@ body {
     grid-template-areas:
         "header header header toggle"
         "checkin checkin result result"
-        "leave perm result result"
+        "leave leave perm perm"
         "shift shift shift shift"
         "clock clock reset reset";
     gap: 14px;
@@ -814,6 +814,20 @@ body {
     gap: 12px;
 }
 
+.cell-leave .pill-group label {
+    font-size: 0.73rem;
+    padding: 10px 6px;
+}
+
+.leave-hint {
+    font-size: 0.62rem;
+    color: var(--text-light);
+    font-weight: 600;
+    text-align: center;
+    margin-top: -4px;
+    transition: color 0.4s ease;
+}
+
 .cell-permission {
     grid-area: perm;
     display: flex;
@@ -857,7 +871,8 @@ body {
         grid-template-areas:
             "header header toggle"
             "checkin checkin result"
-            "leave perm result"
+            "leave leave result"
+            "perm perm perm"
             "shift shift shift"
             "clock clock reset";
     }

@@ -100,8 +100,8 @@
             <!-- CELL: Result (spans 2 rows) -->
             <div class="bento-cell cell-result" id="resultSection">
                 <div class="result-icon" id="resultIcon">
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
@@ -117,25 +117,30 @@
             <!-- CELL: Leave -->
             <div class="bento-cell cell-leave">
                 <div class="label-row">
-                    <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
                     </svg>
-                    <span class="option-label">Leave</span>
+                    <span class="option-label">Half Day</span>
                 </div>
                 <div class="pill-group" id="leaveGroup">
                     <input type="radio" id="leave0" name="leave" value="0" checked>
                     <label for="leave0">None</label>
-                    <input type="radio" id="leave1" name="leave" value="4">
-                    <label for="leave1">Half Day</label>
+                    <input type="radio" id="leave1" name="leave" value="270">
+                    <label for="leave1">W/O Lunch</label>
+                    <input type="radio" id="leave2" name="leave" value="300">
+                    <label for="leave2">W/ Lunch</label>
                 </div>
+                <span class="leave-hint" id="leaveHint"></span>
             </div>
 
             <!-- CELL: Permission -->
             <div class="bento-cell cell-permission">
                 <div class="label-row">
-                    <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                     <span class="option-label">Permission</span>
@@ -153,8 +158,8 @@
             <!-- CELL: Shift Duration -->
             <div class="bento-cell cell-shift">
                 <div class="shift-header-label">
-                    <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="label-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
@@ -177,7 +182,10 @@
                                 <option value="11">11</option>
                                 <option value="12">12</option>
                             </select>
-                            <svg class="select-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            <svg class="select-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
                         </div>
                         <span class="input-hint">Hrs</span>
                     </div>
@@ -190,7 +198,10 @@
                                 <option value="30">30</option>
                                 <option value="45">45</option>
                             </select>
-                            <svg class="select-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            <svg class="select-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
                         </div>
                         <span class="input-hint">Min</span>
                     </div>

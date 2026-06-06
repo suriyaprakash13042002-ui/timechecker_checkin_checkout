@@ -184,7 +184,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. OPTIONS (Leave / Permission)
     // ════════════════════════════════════
     permissionRadios.forEach(r => r.addEventListener('change', autoCalculate));
-    leaveRadios.forEach(r => r.addEventListener('change', autoCalculate));
+    leaveRadios.forEach(r => r.addEventListener('change', () => { updateLeaveHint(); autoCalculate(); }));
+
+    const leaveHintEl = document.getElementById('leaveHint');
+    function updateLeaveHint() {
+        const sel = document.querySelector('input[name="leave"]:checked');
+        if (!leaveHintEl || !sel) return;
+        const val = parseInt(sel.value, 10);
+        if (val === 270) {
+            leaveHintEl.textContent = 'Check-in + 4h 30m';
+        } else if (val === 300) {
+            leaveHintEl.textContent = 'Check-in + 5h 00m';
+        } else {
+            leaveHintEl.textContent = '';
+        }
+    }
 
     // ════════════════════════════════════
     // 6. VALIDATION
@@ -272,13 +286,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedPerm = document.querySelector('input[name="permission"]:checked');
         if (selectedPerm) permHours = parseFloat(selectedPerm.value);
 
-        let leaveHours = 0;
+        let leaveFixedMins = 0;
         const selectedLeave = document.querySelector('input[name="leave"]:checked');
-        if (selectedLeave) leaveHours = parseFloat(selectedLeave.value);
+        if (selectedLeave) leaveFixedMins = parseInt(selectedLeave.value, 10);
 
         const totalShiftMins = (shiftHours * 60) + shiftMinutes;
-        const deductedMins = (permHours + leaveHours) * 60;
-        const actualMins = totalShiftMins - deductedMins;
+        const permMins = permHours * 60;
+        let actualMins;
+
+        if (leaveFixedMins > 0) {
+            // Half day: use fixed minutes (270 = W/O Lunch, 300 = W/ Lunch)
+            actualMins = leaveFixedMins - permMins;
+        } else {
+            // Full day: use shift duration minus permission
+            actualMins = totalShiftMins - permMins;
+        }
 
         // Calculate check-out
         const checkInDate = new Date();
@@ -289,16 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formatted = formatTime12(checkOutDate);
 
-        let dayNote = '';
-        if (checkOutDate.getDate() !== checkInDate.getDate()) {
-            dayNote = ' (Next Day)';
-        }
-
-
-
         // Build detail string
         let details = [];
-        if (leaveHours === 4) details.push('Half Day');
+        if (leaveFixedMins === 270) details.push('Half Day (W/O Lunch)');
+        if (leaveFixedMins === 300) details.push('Half Day (W/ Lunch)');
         if (permHours > 0) details.push(`${permHours}h Permission`);
 
         // Update result UI
@@ -357,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('leave0').checked = true;
         document.getElementById('perm0').checked = true;
+        if (leaveHintEl) leaveHintEl.textContent = '';
     });
 
     // ════════════════════════════════════
